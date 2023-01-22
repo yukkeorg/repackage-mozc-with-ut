@@ -8,7 +8,7 @@ CONTAINER_NAME := repackage-mozc
 all: copy_to_local
 
 copy_to_local: repackage
-	docker container cp $(CONTAINER_NAME):/home/repackage/packages - | tar xf - --strip-components=2
+	docker container cp $(CONTAINER_NAME):/home/repackage/packages - | tar xf -
 
 repackage: create_container
 	docker container start ${CONTAINER_NAME}
@@ -17,7 +17,7 @@ repackage: create_container
 
 create_container: build_image
 	docker container rm -f $(CONTAINER_NAME)
-	docker container create -it --rm --name $(CONTAINER_NAME) $(DOCKER_IMAGE_TAG)
+	docker container create -it --name $(CONTAINER_NAME) $(DOCKER_IMAGE_TAG)
 
 build_image:
 	docker image build --tag $(DOCKER_IMAGE_TAG) --rm --build-arg UBUNTU_IMAGE_TAG=$(UBUNTU_IMAGE_TAG) .
