@@ -20,6 +20,6 @@ sudo dpkg -i *.deb
 
 # License
 
-Scripts in this project are UNLICENSE.  
+Scripts in this project are under the UNLICENSE.  
 
 **but, packages created by this scripts comply with thire own licenses.**
