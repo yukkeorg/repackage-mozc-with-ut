@@ -16,7 +16,9 @@ repackage: create_container
 	docker container stop $(CONTAINER_NAME)
 
 create_container: build_image
-	docker container rm -f $(CONTAINER_NAME)
+	if [ -n `docker container ls -q -a -f name=$(CONTAINER_NAME)` ]; then \
+		docker container rm -f $(CONTAINER_NAME); \
+    fi
 	docker container create -it --name $(CONTAINER_NAME) $(DOCKER_IMAGE_TAG)
 
 build_image:
