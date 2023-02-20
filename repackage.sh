@@ -1,53 +1,23 @@
-#!/bin/sh
+#!/bin/bash
+set -eux
 
-set -eu
+export DEBIAN_FRONTEND=noninteractive
+apt-get source -y mozc
 
-clone_or_pull_utuhiro78repo() {
-    if [ -e "$1" ]; then
-        ( cd "$1" && git pull )
-    else
-        git clone "https://github.com/utuhiro78/${1}.git"
-    fi
-}
+pushd mozc-*+dfsg
 
-clone_or_pull_utuhiro78repo "merge-ut-dictionaries"
+mv src/data/dictionary_oss/dictionary00.txt{,.orig}
+cat src/data/dictionary_oss/dictionary00.txt.orig \
+    ../merge-ut-dictionaries/src/mozcdic-ut.txt \
+    > src/data/dictionary_oss/dictionary00.txt
 
-(
-    cd merge-ut-dictionaries/src
-    RUBYOPT="-Ku" bash ./make.sh
+ls -al src/data/dictionary_oss/dictionary00.txt{,.orig}
 
-    # for d in alt-cannadic edict2 jawiki neologd personal-names place-names skk-jisyo sudachidict; do
-    #     clone_or_pull_utuhiro78repo "mozcdic-ut-$d"
-    # done
-    # cp mozcdic-ut-*/mozcdic-ut-*.txt.tar.bz2 .
-    # for f in mozcdic-ut-*.txt.tar.bz2; do
-    #     tar xf "$f"
-    # done
+dch -l "+ut" "Add UT dictionaries."
+dpkg-buildpackage -b -uc -us -r >/dev/null
 
-    # cat mozcdic-ut-*.txt > mozcdic-ut.txt
- 
-    # export RUBYOPT="-Ku"
-    # ruby remove_duplicate_ut_entries.rb mozcdic-ut.txt
-    # ruby count_word_hits.rb
-    # ruby apply_word_hits.rb mozcdic-ut.txt
-)
-
-apt-get source -y mozc-server
-apt-get build-dep -y mozc-server
-(
-    cd mozc-*+dfsg
-
-    mv src/data/dictionary_oss/dictionary00.txt{,.orig}
-    cat src/data/dictionary_oss/dictionary00.txt.orig \
-        ../merge-ut-dictionaries/src/mozcdic-ut.txt \
-        > src/data/dictionary_oss/dictionary00.txt
-
-    dpkg-source --commit
-
-    DEBEMAIL="nomail@nomail.local" dch -l "+ut" "Add UT dictionary."
-    dpkg-buildpackage -uc -us -ui
-)
+popd
 
 mkdir -p packages
 mv *.deb packages
-ls -al package/*.deb
+ls -al packages/*.deb
