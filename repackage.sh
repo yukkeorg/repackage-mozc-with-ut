@@ -1,46 +1,23 @@
-#!/bin/sh
+#!/bin/bash
+set -eux
 
-set -eu
+export DEBIAN_FRONTEND=noninteractive
+apt-get source -y mozc
 
-git clone https://github.com/utuhiro78/merge-ut-dictionaries.git
+pushd mozc-*+dfsg
 
-(
-    cd merge-ut-dictionaries/src
+mv src/data/dictionary_oss/dictionary00.txt{,.orig}
+cat src/data/dictionary_oss/dictionary00.txt.orig \
+    ../merge-ut-dictionaries/src/mozcdic-ut.txt \
+    > src/data/dictionary_oss/dictionary00.txt
 
-    git clone https://github.com/utuhiro78/mozcdic-ut-alt-cannadic.git
-    git clone https://github.com/utuhiro78/mozcdic-ut-edict2.git
-    git clone https://github.com/utuhiro78/mozcdic-ut-jawiki.git
-    git clone https://github.com/utuhiro78/mozcdic-ut-neologd.git
-    git clone https://github.com/utuhiro78/mozcdic-ut-personal-names.git
-    git clone https://github.com/utuhiro78/mozcdic-ut-place-names.git
-    git clone https://github.com/utuhiro78/mozcdic-ut-skk-jisyo.git
-    git clone https://github.com/utuhiro78/mozcdic-ut-sudachidict.git
+ls -al src/data/dictionary_oss/dictionary00.txt{,.orig}
 
-    cp mozcdic-ut-*/mozcdic-ut-*.txt.tar.bz2 .
-    for f in mozcdic-ut-*.txt.tar.bz2; do
-        tar xf "$f"
-    done
+dch -l "+ut" "Add UT dictionaries."
+dpkg-buildpackage -b -uc -us -r >/dev/null
 
-    export RUBYOPT="-Ku"
-    bash ./make.sh
-
-    ls mozcdic-ut.txt
-)
-
-apt-src install ibus-mozc
-(
-    cd mozc-*+dfsg
-    DEBEMAIL="nomail@nomail.local" dch -l "+ut" "Add UT dictionary."
-
-    cd src/data/dictionary_oss/
-    cp dictionary00.txt dictionary00.txt.orig
-    cat dictionary00.txt.orig ../../../../merge-ut-dictionaries/src/mozcdic-ut.txt > dictionary00.txt
-
-    ls -al dictionary00.txt*
-)
-apt-src build ibus-mozc
-ls -al *.deb
+popd
 
 mkdir -p packages
 mv *.deb packages
-tar cf pkgs.tar packages
+ls -al packages/*.deb
