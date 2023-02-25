@@ -12,12 +12,17 @@ all: build_image create_container repackage download
 
 download:
 	docker container cp $(CONTAINER_NAME):/home/repackage/packages - | tar xf -
+	@echo
+	@echo 'We put packages that rebuilded to in "package".'
+	@echo 'Check it out.'
 
 repackage:
 	docker container start $(CONTAINER_NAME)
 	docker container exec  $(CONTAINER_NAME) bash ./build_ut.sh
 	docker container exec  $(CONTAINER_NAME) bash ./repackage.sh
 	docker container stop  $(CONTAINER_NAME)
+	@echo
+	@echo 'Rebuild done.'
 
 create_container:
 	if [ -n `docker container ls -q -a -f name=$(CONTAINER_NAME)` ]; then \
