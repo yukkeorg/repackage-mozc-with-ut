@@ -1,6 +1,6 @@
 PROJECT := repackage-mozc
 DIST := ubuntu
-DIST_TAG := kinetic
+DIST_TAG := lunar
 IMAGE_NAME := $(DIST):$(DIST_TAG)
 DOCKER_TAG_BASE := $(PROJECT)-$(DIST)-$(DIST_TAG)
 DOCKER_IMAGE_NAME := $(DOCKER_TAG_BASE)
