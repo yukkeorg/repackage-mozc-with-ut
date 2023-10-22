@@ -15,7 +15,7 @@ git clone https://github.com/yukkeorg/repackage-mozc-w-ut.git
 cd repackage-mozc-w-ut
 make
 cd packages
-sudo dpkg -i *.deb
+sudo apt install ./*.deb
 ```
 
 ## License
