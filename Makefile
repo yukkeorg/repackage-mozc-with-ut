@@ -1,6 +1,6 @@
 PROJECT := build_and_pacakge-mozc
 DIST := ubuntu
-DIST_TAG := lunar
+DIST_TAG ?= noble
 IMAGE_NAME := $(DIST):$(DIST_TAG)
 DOCKER_TAG_BASE := $(PROJECT)-$(DIST)-$(DIST_TAG)
 DOCKER_IMAGE_NAME := $(DOCKER_TAG_BASE)
