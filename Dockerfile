@@ -1,4 +1,4 @@
-ARG IMAGE
+ARG IMAGE="ubuntu:noble"
 
 FROM ${IMAGE}
 
