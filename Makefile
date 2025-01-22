@@ -1,6 +1,6 @@
 PROJECT := build_and_pacakge-mozc
 DIST := ubuntu
-DIST_TAG ?= noble
+DIST_TAG ?= oracular
 IMAGE_NAME := $(DIST):$(DIST_TAG)
 DOCKER_TAG_BASE := $(PROJECT)-$(DIST)-$(DIST_TAG)
 DOCKER_IMAGE_NAME := $(DOCKER_TAG_BASE)
@@ -29,15 +29,19 @@ create_container:
     fi
 	docker container create -it --name "$(CONTAINER_NAME)" "$(DOCKER_IMAGE_NAME)"
 
-build_image:
+build_image: rebuild.sh
 	docker image build --tag "$(DOCKER_IMAGE_NAME)" --rm --build-arg IMAGE="$(IMAGE_NAME)" .
+
+rebuild.sh: rebuild.sh.in
+	sed "s/@@UBUNTU_DIST@@/$(DIST_TAG)/g" "$<" > $@
+	chmod +x $@
 
 clean_all: clean clean_docker_cache
 
 clean:
 	docker container stop  $(CONTAINER_NAME)
 	docker container rm -f $(CONTAINER_NAME)
-	@rm -rf pkgs.tar packages
+	@rm -rf pkgs.tar packages rebuild.sh
 
 clean_docker_cache:
 	docker builder prune -f
