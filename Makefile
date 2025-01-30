@@ -1,8 +1,8 @@
 PROJECT := build_and_pacakge-mozc
 DIST := ubuntu
-DIST_TAG ?= oracular
-IMAGE_NAME := $(DIST):$(DIST_TAG)
-DOCKER_TAG_BASE := $(PROJECT)-$(DIST)-$(DIST_TAG)
+DIST_VER ?= oracular
+IMAGE_NAME := $(DIST):$(DIST_VER)
+DOCKER_TAG_BASE := $(PROJECT)-$(DIST)-$(DIST_VER)
 DOCKER_IMAGE_NAME := $(DOCKER_TAG_BASE)
 CONTAINER_NAME := $(PROJECT)
 
@@ -33,7 +33,7 @@ build_image: rebuild.sh
 	docker image build --tag "$(DOCKER_IMAGE_NAME)" --rm --build-arg IMAGE="$(IMAGE_NAME)" .
 
 rebuild.sh: rebuild.sh.in
-	sed "s/@@UBUNTU_DIST@@/$(DIST_TAG)/g" "$<" > $@
+	sed "s/@@UBUNTU_DIST@@/$(DIST_VER)/g" "$<" > $@
 	chmod +x $@
 
 clean_all: clean clean_docker_cache
