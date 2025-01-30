@@ -1,6 +1,6 @@
 # Repackage-mozc-w-ut
 
-Script for re-packaging mozc debs with UT for Ubuntu/Debian.
+Re-packaging mozc DEBs with UT dictionaries script for Ubuntu/Debian.
 
 Thanks for [@utuhiro78](https://github.com/utuhiro78), the mozc-ut auther.
 
@@ -17,6 +17,12 @@ make
 cd packages
 sudo apt install ./*.deb
 ```
+
+## Default Distribution and versions
+
+Ubuntu 24.10(oracular)
+
+If you change this, please edit Makefile.
 
 ## License
 
