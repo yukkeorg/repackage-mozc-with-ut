@@ -1,6 +1,6 @@
 PROJECT := build_and_pacakge-mozc
 DIST := ubuntu
-DIST_VER ?= oracular
+DIST_VER ?= noble
 IMAGE_NAME := $(DIST):$(DIST_VER)
 DOCKER_TAG_BASE := $(PROJECT)-$(DIST)-$(DIST_VER)
 DOCKER_IMAGE_NAME := $(DOCKER_TAG_BASE)
@@ -8,7 +8,7 @@ CONTAINER_NAME := $(PROJECT)
 
 .PHONY: all copy_pkgs_to_local build_and_pacakge create_container build_image clean_all clean clean_docker_cache
 
-all: build_image create_container rebuild copy_to_host
+all: clean build_image create_container rebuild copy_to_host
 
 copy_to_host:
 	docker container cp $(CONTAINER_NAME):/home/repackage/packages - | tar xf -
@@ -39,8 +39,8 @@ rebuild.sh: rebuild.sh.in
 clean_all: clean clean_docker_cache
 
 clean:
-	docker container stop  $(CONTAINER_NAME)
-	docker container rm -f $(CONTAINER_NAME)
+	docker container stop  $(CONTAINER_NAME) || true
+	docker container rm -f $(CONTAINER_NAME) || true
 	@rm -rf pkgs.tar packages rebuild.sh
 
 clean_docker_cache:

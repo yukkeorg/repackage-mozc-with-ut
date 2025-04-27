@@ -20,9 +20,18 @@ sudo apt install ./*.deb
 
 ## Default Distribution and versions
 
-Ubuntu 24.10(oracular)
+Ubuntu 24.04(noble)
 
 If you change this, please edit Makefile.
+
+### Checked Distributions.
+
+- Ubuntu
+
+  - 22.04(jammy)
+  - 24.04(noble)
+  - 24.10(oracular)
+  - 25.04(plucky)
 
 ## License
 
